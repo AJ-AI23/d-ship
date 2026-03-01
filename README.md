@@ -9,26 +9,28 @@ mvx-dapps/
 ├── .github/workflows/
 │   └── deploy.yml      # Platform-triggered deployment (network, contract_path, dapp_id, config)
 ├── contracts/
-│   ├── shipment-creation/   # Shipment creation template (githubPath)
+│   ├── shipment/           # Shipment creation template (githubPath)
 │   │   ├── src/
 │   │   ├── meta/
 │   │   ├── wasm/
 │   │   └── Cargo.toml
-│   ├── tracking-event/     # Register tracking events
-│   ├── serial-number/      # Serial number generation
+│   ├── tracker/            # Register tracking events
+│   ├── serial/             # Serial number generation
+│   ├── parcel/             # Parcel management
 │   └── ...                 # More d-app templates
 ├── config/
-│   └── shipment-creation.example.json
+│   └── shipment.example.json
 └── README.md
 ```
 
 ## D-app Categories
 
-| Contract           | Purpose                        |
-|--------------------|--------------------------------|
-| `shipment-creation`| Create shipments with validation|
-| `tracking-event`   | Register tracking events       |
-| `serial-number`    | Generate serial numbers        |
+| Contract    | Purpose                        |
+|-------------|--------------------------------|
+| `shipment`  | Create shipments with validation|
+| `tracker`   | Register tracking events       |
+| `serial`    | Generate serial numbers        |
+| `parcel`    | Parcel management              |
 
 Each d-app accepts a **JSON config** at init/upgrade, enabling carrier-specific rules without code changes.
 
@@ -41,11 +43,11 @@ Each d-app accepts a **JSON config** at init/upgrade, enabling carrier-specific 
 The platform triggers `deploy.yml` with:
 
 - `network` – mainnet, devnet, testnet
-- `contract_path` – e.g. `contracts/shipment-creation`
+- `contract_path` – e.g. `contracts/shipment`
 - `dapp_id` – unique deployment ID
 - `config` – JSON configuration
 
-## Example Config (shipment-creation)
+## Example Config (shipment)
 
 ```json
 {
@@ -76,12 +78,12 @@ Carrier forks can extend this schema for their own use. The config is passed to 
 cargo install multiversx-sc-meta --version 0.59.0
 
 # Build a single contract
-cd contracts/shipment-creation
+cd contracts/shipment
 sc-meta all build --locked
 
 # Or use the reproducible Docker build
 wget https://raw.githubusercontent.com/multiversx/mx-sdk-rust-contract-builder/v10.0.0/build_with_docker.py
-python3 build_with_docker.py --image=multiversx/sdk-rust-contract-builder:v10.0.0 --project=. --contract=shipment-creation --output=./output
+python3 build_with_docker.py --image=multiversx/sdk-rust-contract-builder:v10.0.0 --project=. --contract=shipment --output=./output
 ```
 
 ## Admin vs Carrier

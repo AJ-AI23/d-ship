@@ -17,11 +17,11 @@ on:
           - testnet
         default: devnet
       contract_path:
-        description: 'Path to contract relative to repo root (e.g. contracts/shipment-creation)'
+        description: 'Path to contract relative to repo root (e.g. contracts/shipment)'
         required: true
         type: string
       contract_name:
-        description: 'Contract package name (e.g. shipment-creation). Inferred from contract_path if empty.'
+        description: 'Contract package name (e.g. shipment). Inferred from contract_path if empty.'
         required: false
         type: string
       dapp_id:

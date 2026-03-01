@@ -2,10 +2,12 @@
 resolver = "2"
 
 members = [
-    "contracts/shipment-creation",
-    "contracts/shipment-creation/meta",
-    "contracts/tracking-event",
-    "contracts/tracking-event/meta",
-    "contracts/serial-number",
-    "contracts/serial-number/meta",
+    "contracts/shipment",
+    "contracts/shipment/meta",
+    "contracts/tracker",
+    "contracts/tracker/meta",
+    "contracts/serial",
+    "contracts/serial/meta",
+    "contracts/parcel",
+    "contracts/parcel/meta",
 ]

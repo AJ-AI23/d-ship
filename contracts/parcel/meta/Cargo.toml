@@ -1,0 +1,12 @@
+[package]
+name = "parcel-meta"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies.parcel]
+path = ".."
+
+[dependencies.multiversx-sc-meta-lib]
+version = "0.57.1"
+default-features = false
