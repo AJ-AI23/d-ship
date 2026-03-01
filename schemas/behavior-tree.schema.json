@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://d-ship.example.com/schemas/behavior-tree.json",
+  "title": "Validation Behavior Tree",
+  "description": "Behavior3-style AST for input validation. Compiles into d-app Rust. Success/Failure only.",
+  "type": "object",
+  "required": ["root"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version for migration"
+    },
+    "root": {
+      "$ref": "#/$defs/Node",
+      "description": "Single root node; tree is defined recursively"
+    },
+    "blackboard": {
+      "$ref": "#/$defs/Blackboard",
+      "description": "Optional key-value store for intermediate validation state"
+    }
+  },
+  "$defs": {
+    "Node": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Unique node identifier within the tree"
+        },
+        "type": {
+          "type": "string",
+          "description": "Node kind; determines behavior",
+          "enum": [
+            "Sequence",
+            "Selector",
+            "Inverter",
+            "Condition",
+            "RangeCheck",
+            "EnumCheck",
+            "RegexCheck",
+            "OracleCall",
+            "ProofRequired",
+            "GasLimit"
+          ]
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Node" },
+          "description": "Child nodes; required for Sequence, Selector, Inverter"
+        },
+        "params": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Node-specific parameters"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "type": { "enum": ["Sequence", "Selector"] } },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "children": {
+                "minItems": 1,
+                "maxItems": 32
+              }
+            },
+            "required": ["children"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "Inverter" } },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "children": {
+                "minItems": 1,
+                "maxItems": 1
+              }
+            },
+            "required": ["children"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "RangeCheck" } },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "required": ["field", "op"],
+                "properties": {
+                  "field": { "type": "string" },
+                  "op": { "enum": ["lt", "le", "eq", "ne", "ge", "gt"] },
+                  "min": { "type": "number" },
+                  "max": { "type": "number" },
+                  "value": {}
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "EnumCheck" } },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "required": ["field", "allowed"],
+                "properties": {
+                  "field": { "type": "string" },
+                  "allowed": {
+                    "type": "array",
+                    "items": {},
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "RegexCheck" } },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "required": ["field", "pattern"],
+                "properties": {
+                  "field": { "type": "string" },
+                  "pattern": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "OracleCall" } },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "required": ["oracle", "endpoint"],
+                "properties": {
+                  "oracle": { "type": "string", "description": "Oracle SC address" },
+                  "endpoint": { "type": "string" },
+                  "args": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "ProofRequired" } },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "properties": {
+                  "proofType": { "type": "string" },
+                  "publicInputs": { "type": "array" }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "GasLimit" } },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "required": ["limit"],
+                "properties": {
+                  "limit": { "type": "integer", "minimum": 0 }
+                }
+              },
+              "children": { "minItems": 1, "maxItems": 1 }
+            },
+            "required": ["children", "params"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "type": { "const": "Condition" } },
+            "required": ["type"]
+          },
+          "then": {
+            "properties": {
+              "params": {
+                "properties": {
+                  "field": { "type": "string" },
+                  "op": { "type": "string" },
+                  "value": {}
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Blackboard": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "description": "Key-value store for intermediate validation values"
+    }
+  }
+}

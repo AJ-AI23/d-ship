@@ -4,6 +4,7 @@
 
 use multiversx_sc::{
     api::ManagedTypeApi,
+    codec::{NestedDecode, NestedEncode, TopDecode, TopEncode},
     types::{BigUint, ManagedAddress, ManagedBuffer, ManagedVec},
 };
 
@@ -46,13 +47,40 @@ pub struct Party<M: ManagedTypeApi> {
     pub address_id: ManagedBuffer<M>,
 }
 
-/// Parcel with weight. Mirrors parcel.schema.json.
-#[derive(Clone)]
+/// Weight units per parcel.schema.json weightUnit enum.
+pub struct ParcelWeightUnit;
+
+impl ParcelWeightUnit {
+    pub const G: &'static str = "G";
+    pub const KG: &'static str = "KG";
+    pub const LB: &'static str = "LB";
+    pub const OZ: &'static str = "OZ";
+}
+
+/// Dangerous goods item. parcel.schema.json dangerousGoods maxItems: 1.
+#[derive(Clone, TopEncode, TopDecode, NestedEncode, NestedDecode)]
+pub struct DangerousGoods<M: ManagedTypeApi> {
+    pub net_quantity: u64,
+    pub net_quantity_unit: ManagedBuffer<M>,
+    pub type_code: ManagedBuffer<M>,
+    pub quantity: u32,
+}
+
+/// Parcel entity mirroring parcel.schema.json.
+/// Weight required at parcel level; weightUnit enum: G, KG, LB, OZ.
+#[derive(Clone, TopEncode, TopDecode, NestedEncode, NestedDecode)]
 pub struct Parcel<M: ManagedTypeApi> {
     pub reference: ManagedBuffer<M>,
-    pub weight_grams: u64,
-    pub weight_unit: ManagedBuffer<M>, // "G" | "KG" | "LB" | "OZ"
     pub description: ManagedBuffer<M>,
+    /// Parcel weight (schema: number, minimum 0). Stored as smallest unit (e.g. grams).
+    pub weight: u64,
+    /// Schema: weightUnit enum ["G","KG","LB","OZ"]
+    pub weight_unit: ManagedBuffer<M>,
+    /// Schema: itemIds, minItems 1 when present. Empty = not provided.
+    pub item_ids: ManagedVec<M, ManagedBuffer<M>>,
+    pub serial: ManagedBuffer<M>,
+    /// Schema: dangerousGoods maxItems 1. Empty = none.
+    pub dangerous_goods: ManagedVec<M, DangerousGoods<M>>,
 }
 
 /// Shipment entity stored on-chain.

@@ -26,6 +26,12 @@ JSON schemas for d-ship contract data, aligned with the [nShift Go API](https://
 | `config/tracker-config.schema.json` | tracker | `register_event` validation |
 | `config/serial-config.schema.json` | serial | `generate` format rules |
 
+### Validation Behavior Tree (d-app config)
+
+| Schema | Description |
+|--------|-------------|
+| `behavior-tree.schema.json` | Behavior3-style AST for input validation. Single root node, `{ id, type, children?, params? }`. Success/Failure only. Embeds in config via `validationTree`. Compiles to Rust at build time. Node types: Sequence, Selector, Inverter, RangeCheck, EnumCheck, RegexCheck, Condition, OracleCall, ProofRequired, GasLimit. |
+
 ## Validation
 
 Config passed to contract `init` at deployment should validate against the corresponding config schema:

@@ -21,20 +21,17 @@
       "type": "object",
       "description": "Per nShift parcelValidations",
       "properties": {
-        "maxWeight": {
-          "type": "number",
-          "minimum": 0,
-          "description": "Max parcel weight in grams"
-        },
-        "minWeight": {
-          "type": "number",
-          "minimum": 0
-        },
+        "maxWeight": { "type": "number", "minimum": 0, "description": "Max parcel weight in grams" },
+        "minWeight": { "type": "number", "minimum": 0 },
         "maxVolume": { "type": "number", "minimum": 0 },
         "minVolume": { "type": "number", "minimum": 0 },
         "maxTotalDimensions": { "type": "integer", "minimum": 0 },
         "minTotalDimensions": { "type": "integer", "minimum": 0 }
       }
+    },
+    "validationTree": {
+      "$ref": "../behavior-tree.schema.json",
+      "description": "Behavior tree for input validation. Compiles into Rust at build time."
     }
   }
 }

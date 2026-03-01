@@ -1,5 +1,6 @@
 //! Validation logic aligned with schemas. Use before creating on-chain entities.
 
+use crate::entities::Parcel;
 use multiversx_sc::{
     api::ManagedTypeApi,
     types::{ManagedBuffer, ManagedVec},
@@ -42,6 +43,43 @@ pub fn validate_parcel_weight(
         }
     }
     true
+}
+
+/// Validate parcel entity against parcel.schema.json rules.
+/// - weight >= 0
+/// - weightUnit in ["G","KG","LB","OZ"]
+/// - itemIds: if present, minItems 1
+/// - dangerousGoods: maxItems 1
+pub fn validate_parcel<M: ManagedTypeApi>(parcel: &Parcel<M>) -> bool {
+    // weight minimum 0 (u64 guarantees non-negative)
+
+    // weightUnit enum: ["G","KG","LB","OZ"]
+    let wu = parcel.weight_unit.to_boxed_bytes();
+    if wu.as_slice() != b"G"
+        && wu.as_slice() != b"KG"
+        && wu.as_slice() != b"LB"
+        && wu.as_slice() != b"OZ"
+    {
+        return false;
+    }
+
+    // itemIds: if present, minItems 1 (empty = not provided; non-empty = valid)
+
+    // dangerousGoods: maxItems 1
+    if parcel.dangerous_goods.len() > 1 {
+        return false;
+    }
+
+    true
+}
+
+/// Validate weightUnit string against schema enum. Returns true if valid.
+pub fn validate_weight_unit<M: ManagedTypeApi>(unit: &ManagedBuffer<M>) -> bool {
+    let wu = unit.to_boxed_bytes();
+    wu.as_slice() == b"G"
+        || wu.as_slice() == b"KG"
+        || wu.as_slice() == b"LB"
+        || wu.as_slice() == b"OZ"
 }
 
 /// Validate country code against allowed list.
