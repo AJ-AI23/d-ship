@@ -1,0 +1,17 @@
+{
+  "network": {
+    "gasLimit": 60000000
+  },
+  "processors": {
+    "autoLabel": true,
+    "barcodeFormat": "CODE128"
+  },
+  "validators": {
+    "maxWeight": 30000,
+    "maxDimensions": {
+      "width": 200,
+      "height": 200,
+      "length": 300
+    }
+  }
+}

@@ -1,0 +1,21 @@
+# Rust (keep Cargo.lock for reproducible builds)
+/target/
+**/*.rs.bk
+
+# Contract output
+/output/
+/output-*/
+*.wasm
+*.abi.json
+*.source.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

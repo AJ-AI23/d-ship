@@ -1,0 +1,100 @@
+# MultiverseX d-app deploy workflow
+# Triggered by the platform when deploying a carrier d-app.
+# Carrier forks inherit this workflow and receive config at dispatch.
+
+name: Deploy d-app
+
+on:
+  workflow_dispatch:
+    inputs:
+      network:
+        description: 'Target network (mainnet, devnet, testnet)'
+        required: true
+        type: choice
+        options:
+          - mainnet
+          - devnet
+          - testnet
+        default: devnet
+      contract_path:
+        description: 'Path to contract relative to repo root (e.g. contracts/shipment-creation)'
+        required: true
+        type: string
+      contract_name:
+        description: 'Contract package name (e.g. shipment-creation). Inferred from contract_path if empty.'
+        required: false
+        type: string
+      dapp_id:
+        description: 'Unique d-app deployment identifier from the platform'
+        required: true
+        type: string
+      config:
+        description: 'JSON configuration for the d-app (e.g. validators, processors, network.gasLimit)'
+        required: true
+        type: string
+
+env:
+  IMAGE_TAG: v10.0.0
+
+jobs:
+  build:
+    name: Build d-app WASM
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      wasm_path: ${{ steps.build.outputs.wasm_path }}
+      artifacts_path: ${{ steps.build.outputs.artifacts_path }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine contract name
+        id: contract
+        run: |
+          CONTRACT_PATH="${{ inputs.contract_path }}"
+          CONTRACT_NAME="${{ inputs.contract_name }}"
+          if [ -z "$CONTRACT_NAME" ]; then
+            CONTRACT_NAME=$(basename "$CONTRACT_PATH")
+          fi
+          echo "path=$CONTRACT_PATH" >> $GITHUB_OUTPUT
+          echo "name=$CONTRACT_NAME" >> $GITHUB_OUTPUT
+          echo "Building contract: $CONTRACT_NAME at $CONTRACT_PATH"
+
+      - name: Validate config JSON
+        run: |
+          echo '${{ inputs.config }}' | python3 -c "import sys, json; json.load(sys.stdin)" || exit 1
+          echo "Config JSON is valid"
+
+      - name: Download build script
+        run: |
+          wget -q "https://raw.githubusercontent.com/multiversx/mx-sdk-rust-contract-builder/${{ env.IMAGE_TAG }}/build_with_docker.py"
+
+      - name: Build contract
+        id: build
+        run: |
+          mkdir -p /tmp/dapp-output
+          python3 ./build_with_docker.py \
+            --no-docker-tty \
+            --image=multiversx/sdk-rust-contract-builder:${{ env.IMAGE_TAG }} \
+            --project=. \
+            --contract=${{ steps.contract.outputs.name }} \
+            --output=/tmp/dapp-output
+          # Find the built WASM (output structure varies by contract)
+          WASM_FILE=$(find /tmp/dapp-output -name "*.wasm" -type f | head -1)
+          echo "wasm_path=$WASM_FILE" >> $GITHUB_OUTPUT
+          echo "artifacts_path=/tmp/dapp-output" >> $GITHUB_OUTPUT
+          echo "Built: $WASM_FILE"
+
+      - name: Save config for deployment
+        run: |
+          mkdir -p /tmp/dapp-output/config
+          echo '${{ inputs.config }}' > /tmp/dapp-output/config/dapp_config.json
+          echo '{"network":"${{ inputs.network }}","dapp_id":"${{ inputs.dapp_id }}"}' > /tmp/dapp-output/config/deploy_meta.json
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dapp-${{ inputs.dapp_id }}-${{ steps.contract.outputs.name }}
+          path: /tmp/dapp-output/
+          if-no-files-found: error
