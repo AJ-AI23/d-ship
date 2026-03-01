@@ -32,6 +32,8 @@ JSON schemas for d-ship contract data, aligned with the [nShift Go API](https://
 |--------|-------------|
 | `behavior-tree.schema.json` | Behavior3-style AST for input validation. Single root node, `{ id, type, children?, params? }`. Success/Failure only. Embeds in config via `validationTree`. Compiles to Rust at build time. Node types: Sequence, Selector, Inverter, RangeCheck, EnumCheck, RegexCheck, Condition, OracleCall, ProofRequired, GasLimit. |
 
+See [docs/behavior-tree-README.md](../docs/behavior-tree-README.md) for compilation steps and UI implementation guide.
+
 ## Validation
 
 Config passed to contract `init` at deployment should validate against the corresponding config schema:
