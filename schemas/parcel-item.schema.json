@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.qa.nshiftgo.com/schemas/parcel-item.json",
+  "title": "Parcel Item",
+  "description": "Individual product within a parcel. Per nShift Go API ParcelItemRequest.",
+  "type": "object",
+  "required": ["quantity"],
+  "properties": {
+    "quantity": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Number of items in the parcel"
+    },
+    "isReturnable": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the item is returnable"
+    },
+    "product": {
+      "type": "object",
+      "required": ["sku"],
+      "properties": {
+        "sku": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Product SKU (Stock Keeping Unit)"
+        },
+        "isPhysical": { "type": "boolean", "default": true },
+        "weight": { "type": "number", "minimum": 0 },
+        "weightUnit": { "type": "string", "enum": ["G", "KG", "LB", "OZ"] },
+        "description": { "type": "string" },
+        "location": { "type": "string" }
+      }
+    },
+    "pricing": {
+      "type": "object",
+      "properties": {
+        "unitPrice": { "type": "number" },
+        "tariffNumber": { "type": "string" },
+        "countryOfOrigin": { "type": "string" },
+        "vatPercent": { "type": "number" },
+        "currency": { "type": "string" }
+      }
+    },
+    "reference": { "type": "string" },
+    "meta": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "packing": {
+      "type": "object",
+      "properties": {
+        "weight": { "type": "number" },
+        "weightUnit": { "type": "string", "enum": ["G", "KG", "LB", "OZ"] }
+      }
+    },
+    "dangerousGoods": {
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["netQuantity"],
+        "properties": {
+          "type": { "type": "string" },
+          "quantity": { "type": "integer" },
+          "netQuantity": { "type": "number" },
+          "netQuantityUnit": {
+            "type": "string",
+            "enum": ["G", "KG", "LB", "OZ", "CM3", "DM3", "M3", "IN3", "FT3"]
+          }
+        }
+      }
+    },
+    "weight": { "type": "number", "minimum": 0 },
+    "weightUnit": { "type": "string", "enum": ["G", "KG", "LB", "OZ"] }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.qa.nshiftgo.com/schemas/tracker.json",
+  "title": "Tracker",
+  "description": "Tracking info for shipment. Per nShift Go API TrackerRequest.",
+  "type": "object",
+  "required": ["status", "shipment"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["BOOKED", "DISPATCHED", "VOID"],
+      "description": "Harmonized tracker status"
+    },
+    "shipment": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["BOOKED", "DISPATCHED", "VOID"]
+        },
+        "serial": {
+          "type": "string",
+          "description": "Carrier tracking number"
+        },
+        "link": {
+          "type": "string",
+          "format": "uri",
+          "description": "Tracking URL"
+        }
+      }
+    },
+    "parcels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["BOOKED", "DISPATCHED", "VOID"]
+          },
+          "serial": { "type": "string" },
+          "reference": { "type": "string" }
+        }
+      }
+    }
+  }
+}

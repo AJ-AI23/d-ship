@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://d-ship.example.com/schemas/config/parcel-config.json",
+  "title": "Parcel d-app Config",
+  "description": "Deployment config for parcel contract. Used by register_parcel validation.",
+  "type": "object",
+  "properties": {
+    "network": {
+      "type": "object",
+      "properties": {
+        "gasLimit": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "processors": {
+      "type": "object",
+      "properties": {
+        "autoLabel": { "type": "boolean", "default": true }
+      }
+    },
+    "validators": {
+      "type": "object",
+      "description": "Per nShift parcelValidations",
+      "properties": {
+        "maxWeight": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Max parcel weight in grams"
+        },
+        "minWeight": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxVolume": { "type": "number", "minimum": 0 },
+        "minVolume": { "type": "number", "minimum": 0 },
+        "maxTotalDimensions": { "type": "integer", "minimum": 0 },
+        "minTotalDimensions": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

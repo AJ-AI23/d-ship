@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.qa.nshiftgo.com/schemas/parcel.json",
+  "title": "Parcel",
+  "description": "Physical shipment container. Per nShift Go API ParcelRequest. Weight required at parcel, packing, or item level.",
+  "type": "object",
+  "properties": {
+    "reference": { "type": "string" },
+    "description": { "type": "string" },
+    "weight": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Parcel weight. Required if not at packing or item level."
+    },
+    "weightUnit": {
+      "type": "string",
+      "enum": ["G", "KG", "LB", "OZ"]
+    },
+    "packing": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string" },
+        "codeType": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "code": { "type": "string" }
+          }
+        },
+        "weight": { "type": "number" },
+        "weightUnit": { "type": "string", "enum": ["G", "KG", "LB", "OZ"] },
+        "volume": { "type": "number" },
+        "volumeUnit": {
+          "type": "string",
+          "enum": ["CM3", "DM3", "M3", "IN3", "FT3"]
+        },
+        "width": { "type": "number" },
+        "height": { "type": "number" },
+        "length": { "type": "number" },
+        "dimensionsUnit": {
+          "type": "string",
+          "enum": ["M", "DM", "CM", "MM", "IN", "FT", "YD"]
+        },
+        "pallet": {
+          "type": "object",
+          "properties": {
+            "group": { "type": "string" },
+            "type": {
+              "type": "string",
+              "enum": ["EPAL-1", "EPAL-2", "EPAL-3", "EPAL-6"]
+            }
+          }
+        },
+        "markings": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "THIS_SIDE_UP", "FRAGILE", "KEEP_DRY", "DO_NOT_STACK",
+              "USE_NO_FORKS", "USE_NO_HOOKS"
+            ]
+          }
+        }
+      }
+    },
+    "itemIds": {
+      "type": "array",
+      "items": { "type": "string", "format": "uuid" },
+      "minItems": 1,
+      "description": "Parcel item UUIDs"
+    },
+    "serial": { "type": "string" },
+    "meta": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "dangerousGoods": {
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["netQuantity"],
+        "properties": {
+          "type": { "type": "string" },
+          "quantity": { "type": "integer" },
+          "netQuantity": { "type": "number" },
+          "netQuantityUnit": {
+            "type": "string",
+            "enum": ["G", "KG", "LB", "OZ", "CM3", "DM3", "M3", "IN3", "FT3"]
+          }
+        }
+      }
+    }
+  }
+}

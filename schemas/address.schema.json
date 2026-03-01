@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.qa.nshiftgo.com/schemas/address.json",
+  "title": "Address",
+  "description": "Standardized address structure per nShift Go API. Used for sender, receiver, dispatch, and delivery parties.",
+  "type": "object",
+  "required": ["location"],
+  "properties": {
+    "group": {
+      "type": "string",
+      "maxLength": 256,
+      "pattern": "^\\w+$",
+      "description": "Address group for filtering (e.g. warehouse_A)"
+    },
+    "references": {
+      "type": "object",
+      "properties": {
+        "internal": { "type": "string", "maxLength": 256 },
+        "external": { "type": "string", "maxLength": 256 }
+      },
+      "description": "Internal and external reference values"
+    },
+    "lines": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 256 },
+      "minItems": 0,
+      "maxItems": 4,
+      "description": "Address lines. Auto-generated from location if omitted."
+    },
+    "location": {
+      "type": "object",
+      "required": ["streetName", "postalCode", "city", "countryCode"],
+      "properties": {
+        "streetName": { "type": "string", "maxLength": 256 },
+        "streetNumber": { "type": "string", "maxLength": 256 },
+        "buildingName": { "type": "string", "maxLength": 256 },
+        "buildingNumber": { "type": "string", "maxLength": 256 },
+        "unit": { "type": "string", "maxLength": 256 },
+        "floor": { "type": "string", "maxLength": 256 },
+        "locality": { "type": "string", "maxLength": 256 },
+        "postalCode": { "type": "string", "maxLength": 256 },
+        "city": { "type": "string", "maxLength": 256 },
+        "region": { "type": "string", "maxLength": 256 },
+        "stateCode": { "type": "string", "maxLength": 256 },
+        "countryCode": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 2,
+          "description": "ISO 3166-1 alpha-2 country code"
+        },
+        "geoCoding": {
+          "type": "object",
+          "properties": {
+            "latitude": { "type": "string", "maxLength": 256 },
+            "longitude": { "type": "string", "maxLength": 256 }
+          }
+        }
+      },
+      "description": "Address location. streetName, postalCode, city, countryCode required."
+    },
+    "company": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 256 },
+        "doorCode": { "type": "string", "maxLength": 256 },
+        "identification": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "value"],
+            "properties": {
+              "type": { "type": "string", "maxLength": 256 },
+              "value": { "type": "string", "maxLength": 256 }
+            }
+          }
+        }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "properties": {
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "mobile": { "type": "string" },
+        "doorCode": { "type": "string" },
+        "careOf": { "type": "string" }
+      }
+    }
+  }
+}

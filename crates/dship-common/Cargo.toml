@@ -1,0 +1,12 @@
+[package]
+name = "dship-common"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Shared types and logic for d-ship contracts. Mirrors schemas/ definitions."
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+multiversx-sc = "0.57.1"

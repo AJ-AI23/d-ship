@@ -8,8 +8,9 @@ description = "Shipment creation d-app for MultiverseX shipping"
 [lib]
 path = "src/lib.rs"
 
-[dependencies.multiversx-sc]
-version = "0.57.1"
+[dependencies]
+multiversx-sc = "0.57.1"
+dship-common = { path = "../../crates/dship-common" }
 
 [dev-dependencies.multiversx-sc-scenario]
 version = "0.57.1"

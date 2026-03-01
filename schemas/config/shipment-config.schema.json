@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://d-ship.example.com/schemas/config/shipment-config.json",
+  "title": "Shipment d-app Config",
+  "description": "Deployment config for shipment contract. Used by create_shipment validation. Aligns with nShift Shipment Booking requirements.",
+  "type": "object",
+  "properties": {
+    "network": {
+      "type": "object",
+      "properties": {
+        "gasLimit": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "processors": {
+      "type": "object",
+      "properties": {
+        "autoLabel": { "type": "boolean", "default": true },
+        "barcodeFormat": {
+          "type": "string",
+          "enum": ["CODE128", "CODE39", "EAN13", "QR"],
+          "description": "Serial/label barcode format"
+        }
+      }
+    },
+    "validators": {
+      "type": "object",
+      "description": "Validation rules from nShift Service parcelValidations/shipmentValidations",
+      "properties": {
+        "maxWeight": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Max parcel weight in grams"
+        },
+        "minWeight": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Min parcel weight in grams"
+        },
+        "maxDimensions": {
+          "type": "object",
+          "properties": {
+            "width": { "type": "number", "minimum": 0, "description": "cm" },
+            "height": { "type": "number", "minimum": 0, "description": "cm" },
+            "length": { "type": "number", "minimum": 0, "description": "cm" }
+          }
+        },
+        "minDimensions": {
+          "type": "object",
+          "properties": {
+            "width": { "type": "number", "minimum": 0 },
+            "height": { "type": "number", "minimum": 0 },
+            "length": { "type": "number", "minimum": 0 }
+          }
+        },
+        "maxParcels": { "type": "integer", "minimum": 1 },
+        "minParcels": { "type": "integer", "minimum": 1 },
+        "allowedCountries": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2, "maxLength": 2 }
+        }
+      }
+    }
+  }
+}

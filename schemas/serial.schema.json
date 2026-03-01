@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.qa.nshiftgo.com/schemas/serial.json",
+  "title": "Serial Number",
+  "description": "Serial type configuration per nShift Go API. Defines format for tracking numbers and labels.",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "Serial type code (e.g. SERIAL01)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name"
+    },
+    "pattern": {
+      "type": "string",
+      "description": "Regex pattern for validation"
+    },
+    "checkDigitMethod": {
+      "type": "string",
+      "description": "e.g. MOD10"
+    }
+  }
+}

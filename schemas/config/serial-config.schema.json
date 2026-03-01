@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://d-ship.example.com/schemas/config/serial-config.json",
+  "title": "Serial d-app Config",
+  "description": "Deployment config for serial contract. Per nShift Serial Types.",
+  "type": "object",
+  "properties": {
+    "network": {
+      "type": "object",
+      "properties": {
+        "gasLimit": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "format": {
+      "type": "object",
+      "properties": {
+        "prefix": { "type": "string" },
+        "pattern": { "type": "string", "description": "Regex for validation" },
+        "checkDigitMethod": { "type": "string" },
+        "barcodeFormat": {
+          "type": "string",
+          "enum": ["CODE128", "CODE39", "EAN13", "QR"]
+        }
+      }
+    }
+  }
+}

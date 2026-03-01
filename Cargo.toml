@@ -2,6 +2,7 @@
 resolver = "2"
 
 members = [
+    "crates/dship-common",
     "contracts/shipment",
     "contracts/shipment/meta",
     "contracts/tracker",

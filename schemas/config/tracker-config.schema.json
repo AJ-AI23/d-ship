@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://d-ship.example.com/schemas/config/tracker-config.json",
+  "title": "Tracker d-app Config",
+  "description": "Deployment config for tracker contract. Used by register_event validation.",
+  "type": "object",
+  "properties": {
+    "network": {
+      "type": "object",
+      "properties": {
+        "gasLimit": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "validators": {
+      "type": "object",
+      "properties": {
+        "allowedEventTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "BOOKED", "DISPATCHED", "IN_TRANSIT", "OUT_FOR_DELIVERY",
+              "DELIVERED", "EXCEPTION", "VOID"
+            ]
+          },
+          "description": "Per nShift tracker status enum"
+        }
+      }
+    }
+  }
+}

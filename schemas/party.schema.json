@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.qa.nshiftgo.com/schemas/party.json",
+  "title": "Party",
+  "description": "Shipment party linking address or PUDO point to roles. Per nShift Go API Party.",
+  "type": "object",
+  "required": ["type", "roles", "id"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["ADDRESS", "PUDO"],
+      "pattern": "^(ADDRESS|PUDO)$"
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "SENDER", "RECEIVER", "DELIVERY", "DISPATCH", "RETURN",
+          "FREIGHT_PAYER", "TAX_PAYER", "CUSTOMS_PAYER", "IMPORTER", "EXPORTER"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Address ID or PUDO point ID"
+    }
+  }
+}

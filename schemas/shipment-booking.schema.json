@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.qa.nshiftgo.com/schemas/shipment-booking.json",
+  "title": "Shipment Booking",
+  "description": "Shipment booking request. Per nShift Go API ShipmentBookingRequest. Links channel, parties, carrier, service, and parcels.",
+  "type": "object",
+  "required": [
+    "shipmentChannelId",
+    "parties",
+    "carrierDefinitionId",
+    "serviceDefinitionId",
+    "parcelIds"
+  ],
+  "properties": {
+    "shipmentChannelId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "parties": {
+      "type": "array",
+      "items": { "$ref": "./party.schema.json" },
+      "minItems": 2,
+      "description": "At least sender and receiver"
+    },
+    "carrierDefinitionId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "serviceDefinitionId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "customsDeclarationId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Required for cross-border"
+    },
+    "info": {
+      "type": "object",
+      "properties": {
+        "carrier": {
+          "type": "object",
+          "properties": {
+            "reference": { "type": "string" },
+            "instructions": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "dispatch": {
+          "type": "object",
+          "properties": {
+            "reference": { "type": "string" },
+            "instructions": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "delivery": {
+          "type": "object",
+          "properties": {
+            "reference": { "type": "string" },
+            "instructions": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "terms": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string", "description": "e.g. DDP, DAP" },
+            "location": { "type": "string" }
+          }
+        }
+      }
+    },
+    "parcelIds": {
+      "type": "array",
+      "items": { "type": "string", "format": "uuid" },
+      "minItems": 0,
+      "maxItems": 49
+    },
+    "dangerousGoodsDeclarationId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "pickup": {
+      "type": "object",
+      "required": ["slot"],
+      "properties": {
+        "slot": {
+          "type": "object",
+          "required": ["date", "timeFrom", "timeTo"],
+          "properties": {
+            "date": { "type": "string", "format": "date-time" },
+            "timeFrom": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+            "timeTo": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" }
+          }
+        },
+        "instructions": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}
