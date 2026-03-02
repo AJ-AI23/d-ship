@@ -4,8 +4,9 @@
 
 use multiversx_sc::{
     api::ManagedTypeApi,
-    codec::{NestedDecode, NestedEncode, TopDecode, TopEncode},
-    types::{BigUint, ManagedAddress, ManagedBuffer, ManagedVec},
+    codec::{self, derive::*},
+    derive::ManagedVecItem,
+    types::{ManagedAddress, ManagedBuffer, ManagedVec},
 };
 
 /// Address location (required: streetName, postalCode, city, countryCode).
@@ -58,7 +59,7 @@ impl ParcelWeightUnit {
 }
 
 /// Dangerous goods item. parcel.schema.json dangerousGoods maxItems: 1.
-#[derive(Clone, TopEncode, TopDecode, NestedEncode, NestedDecode)]
+#[derive(Clone, TopEncode, TopDecode, NestedEncode, NestedDecode, ManagedVecItem)]
 pub struct DangerousGoods<M: ManagedTypeApi> {
     pub net_quantity: u64,
     pub net_quantity_unit: ManagedBuffer<M>,

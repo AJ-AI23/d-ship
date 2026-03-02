@@ -12,4 +12,10 @@ members = [
     "contracts/serial/meta",
     "contracts/parcel",
     "contracts/parcel/meta",
+    "contracts/agreement",
+    "contracts/agreement/meta",
+    "contracts/onboarding",
+    "contracts/onboarding/meta",
+    "contracts/service",
+    "contracts/service/meta",
 ]

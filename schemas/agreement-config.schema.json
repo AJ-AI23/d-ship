@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.dship.dev/schemas/agreement-config.json",
+  "title": "Agreement Config",
+  "description": "Carrier-customer agreement configuration. Canonical hash: SHA256 of deterministic JSON (sorted keys, no whitespace).",
+  "type": "object",
+  "properties": {
+    "enabledServices": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Service IDs the customer is allowed to use"
+    },
+    "routeRestrictions": {
+      "type": "object",
+      "properties": {
+        "allowedOriginCountries": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "allowedDestinationCountries": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "quotas": {
+      "type": "object",
+      "properties": {
+        "maxShipmentsPerMonth": { "type": "integer", "minimum": 0 },
+        "maxAmountPerMonth": { "type": "string", "description": "Wei amount as string" }
+      }
+    },
+    "pricingModelRef": {
+      "type": "string",
+      "description": "Hash or ID of pricing model"
+    },
+    "creditLimit": {
+      "type": "string",
+      "description": "Wei amount as string (optional)"
+    },
+    "spendingCap": {
+      "type": "string",
+      "description": "Per-period cap in wei (optional)"
+    }
+  },
+  "required": ["enabledServices"]
+}

@@ -1,9 +1,9 @@
 [package]
-name = "shipment"
+name = "agreement"
 version = "0.1.0"
 edition = "2021"
 publish = false
-description = "Agreement-aware shipment creation d-app backend"
+description = "Per-customer agreement and billing authority for carrier-customer shipping"
 
 [lib]
 path = "src/lib.rs"
@@ -11,8 +11,6 @@ path = "src/lib.rs"
 [dependencies]
 multiversx-sc = "0.57.1"
 dship-common = { path = "../../crates/dship-common" }
-service = { path = "../service" }
-agreement = { path = "../agreement" }
 
 [dev-dependencies.multiversx-sc-scenario]
 version = "0.57.1"

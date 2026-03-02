@@ -3,6 +3,23 @@
 version = 4
 
 [[package]]
+name = "agreement"
+version = "0.1.0"
+dependencies = [
+ "dship-common",
+ "multiversx-sc",
+ "multiversx-sc-scenario",
+]
+
+[[package]]
+name = "agreement-meta"
+version = "0.1.0"
+dependencies = [
+ "agreement",
+ "multiversx-sc-meta-lib",
+]
+
+[[package]]
 name = "anstream"
 version = "0.6.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -650,6 +667,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "onboarding"
+version = "0.1.0"
+dependencies = [
+ "dship-common",
+ "multiversx-sc",
+ "multiversx-sc-scenario",
+]
+
+[[package]]
+name = "onboarding-meta"
+version = "0.1.0"
+dependencies = [
+ "multiversx-sc-meta-lib",
+ "onboarding",
+]
+
+[[package]]
 name = "once_cell_polyfill"
 version = "1.70.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -854,6 +888,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "service"
+version = "0.1.0"
+dependencies = [
+ "multiversx-sc",
+ "multiversx-sc-scenario",
+]
+
+[[package]]
+name = "service-meta"
+version = "0.1.0"
+dependencies = [
+ "multiversx-sc-meta-lib",
+ "service",
+]
+
+[[package]]
 name = "sha2"
 version = "0.10.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -878,13 +928,15 @@ dependencies = [
 name = "shipment"
 version = "0.1.0"
 dependencies = [
+ "agreement",
  "dship-common",
  "multiversx-sc",
  "multiversx-sc-scenario",
+ "service",
 ]
 
 [[package]]
-name = "shipment-creation-meta"
+name = "shipment-meta"
 version = "0.1.0"
 dependencies = [
  "multiversx-sc-meta-lib",

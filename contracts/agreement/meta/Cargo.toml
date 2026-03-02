@@ -1,10 +1,10 @@
 [package]
-name = "shipment-meta"
+name = "agreement-meta"
 version = "0.1.0"
 edition = "2021"
 publish = false
 
-[dependencies.shipment]
+[dependencies.agreement]
 path = ".."
 
 [dependencies.multiversx-sc-meta-lib]

@@ -91,7 +91,7 @@ pub fn validate_country(
         None => true,
         Some(allowed) => {
             for cc in allowed.iter() {
-                if &cc == country_code {
+                if cc.to_boxed_bytes().as_slice() == country_code.to_boxed_bytes().as_slice() {
                     return true;
                 }
             }

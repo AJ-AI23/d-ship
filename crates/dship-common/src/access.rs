@@ -15,14 +15,12 @@ pub struct AccessRule<M: ManagedTypeApi> {
 
 /// Check if subject is allowed to perform action on resource.
 /// Implementations can use owner check, role lists, or config-driven rules.
-pub fn can_perform(
+pub fn can_perform<M: ManagedTypeApi>(
     subject: &ManagedAddress<M>,
     action: &ManagedBuffer<M>,
     resource: &ManagedBuffer<M>,
     owner: &ManagedAddress<M>,
 ) -> bool
-where
-    M: ManagedTypeApi,
 {
     // Owner can do anything on own resources
     if subject == owner {

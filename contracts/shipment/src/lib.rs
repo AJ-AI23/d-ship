@@ -1,104 +1,88 @@
-//! Shipment d-app for MultiverseX shipping.
+//! Shipment: agreement-aware shipment creation backend.
 //!
-//! Uses dship-common for: entity types (schema-aligned), validation, ownership,
-//! payment, and access control.
+//! Orchestrates: Service validate/quote -> Agreement authorize/reserve/capture.
 #![no_std]
 
-use dship_common::{access, entities, ownership, storage, validation};
+use dship_common::entities;
 use multiversx_sc::imports::*;
 
 #[multiversx_sc::contract]
 pub trait Shipment {
-    #[view(getConfig)]
-    #[storage_mapper("config")]
-    fn config(&self) -> SingleValueMapper<ManagedBuffer>;
+    #[view(getAllowedFactory)]
+    #[storage_mapper("allowed_factory")]
+    fn allowed_factory(&self) -> SingleValueMapper<ManagedAddress>;
 
-    #[storage_mapper("payment_target")]
-    fn payment_target(&self) -> SingleValueMapper<ManagedAddress>;
+    #[storage_mapper("service_registry")]
+    fn service_registry(&self, service_id: &ManagedBuffer) -> SingleValueMapper<ManagedAddress>;
 
     #[storage_mapper("shipment")]
-    fn shipment(&self, id: &ManagedBuffer) -> SingleValueMapper<ManagedBuffer>;
+    fn shipment(&self, tracking_number: &ManagedBuffer) -> SingleValueMapper<ManagedBuffer>;
 
-    #[storage_mapper("owner")]
-    fn owner(&self, id: &ManagedBuffer) -> SingleValueMapper<ManagedAddress>;
+    #[storage_mapper("shipment_owner")]
+    fn shipment_owner(&self, tracking_number: &ManagedBuffer) -> SingleValueMapper<ManagedAddress>;
 
     #[init]
-    fn init(&self, config: ManagedBuffer) {
-        self.config().set(config);
+    fn init(&self, allowed_factory: ManagedAddress) {
+        self.allowed_factory().set(&allowed_factory);
     }
 
-    #[endpoint(setPaymentTarget)]
-    fn set_payment_target(&self, target: ManagedAddress) {
-        self.payment_target().set(target);
+    #[endpoint(registerService)]
+    fn register_service(&self, service_id: ManagedBuffer, service_addr: ManagedAddress) {
+        self.service_registry(&service_id).set(&service_addr);
     }
 
-    #[upgrade]
-    fn upgrade(&self, config: ManagedBuffer) {
-        self.config().set(config);
-    }
-
-    /// Create a shipment. Validates input, assigns ownership, optionally charges.
-    #[payable("EGLD")]
-    #[endpoint]
+    /// Create shipment: validate, quote, authorize, reserve, create, capture.
+    #[endpoint(createShipment)]
     fn create_shipment(
         &self,
+        agreement_addr: ManagedAddress,
+        service_id: ManagedBuffer,
+        shipment_payload: ManagedBuffer,
         tracking_number: ManagedBuffer,
-        sender_id: ManagedBuffer,
-        recipient_id: ManagedBuffer,
-        #[var_args] parcel_ids: MultiValueEncoded<ManagedBuffer>,
     ) {
         let caller = self.blockchain().get_caller();
 
-        // 1. Process input: build entity from schema-aligned types
-        let parcel_ids_vec: ManagedVec<_, ManagedBuffer> = parcel_ids.to_vec();
-        let entity = entities::Shipment {
+        let service_addr = self.service_registry(&service_id).get();
+        require!(!service_addr.is_zero(), "Service not registered");
+
+        let mut service_proxy = self.service_proxy(service_addr);
+
+        let is_valid: bool = service_proxy.validate(shipment_payload.clone()).execute_on_dest_context();
+        require!(is_valid, "Validation failed");
+
+        let (normalized_metrics, amount, quote_hash): (ManagedBuffer, BigUint, ManagedBuffer) =
+            service_proxy.quote(shipment_payload.clone()).execute_on_dest_context();
+
+        let mut agreement_proxy = self.agreement_proxy(agreement_addr.clone());
+
+        let authorized: bool = agreement_proxy
+            .authorize_shipment(service_id.clone(), normalized_metrics, amount.clone(), quote_hash)
+            .execute_on_dest_context();
+        require!(authorized, "Authorization failed");
+
+        let reference = tracking_number.clone();
+        let reservation_id: u64 = agreement_proxy
+            .reserve(amount.clone(), reference)
+            .execute_on_dest_context();
+
+        let _entity = entities::Shipment {
             tracking_number: tracking_number.clone(),
-            sender_id,
-            recipient_id,
-            parcel_ids: parcel_ids_vec,
+            sender_id: ManagedBuffer::new(),
+            recipient_id: ManagedBuffer::new(),
+            parcel_ids: ManagedVec::new(),
             carrier_definition_id: ManagedBuffer::new(),
-            service_definition_id: ManagedBuffer::new(),
+            service_definition_id: service_id.clone(),
         };
 
-        // 2. Validation (config-driven when ValidationConfig::from_config is implemented)
-        let config = self.config().get();
-        let validation_cfg = validation::ValidationConfig::from_config(&config);
-        if let Some(ref v) = validation_cfg {
-            if let Some(max) = v.max_parcels {
-                require!(entity.parcel_ids.len() <= max as usize, "Too many parcels");
-            }
-        }
-
-        // 3. Ownership: assign to caller
-        let ownership_target = ownership::OwnershipTarget::caller(&caller);
-        self.owner(&tracking_number).set(&ownership_target.owner);
-
-        // 4. Access control: caller must be allowed (ownership handles create)
-        let resource = ManagedBuffer::from("shipment");
-        require!(
-            access::can_perform(
-                &caller,
-                &ManagedBuffer::from("create"),
-                &resource,
-                &ownership_target.owner,
-            ),
-            "Access denied"
-        );
-
-        // 5. Storage: entity by id (extend with storage::StorageKey for sub-units)
         self.shipment(&tracking_number).set(&tracking_number);
+        self.shipment_owner(&tracking_number).set(&caller);
 
-        // 6. Charge: if payment_target configured, forward EGLD
-        if let Some(target) = self.payment_target().get() {
-            let amount = self.call_value().egld_value();
-            if amount > 0u32 {
-                self.send().direct_egld(&target, &amount);
-            }
-        }
+        let _: () = agreement_proxy.capture(reservation_id).execute_on_dest_context();
     }
 
-    #[view(getConfigHash)]
-    fn get_config_hash(&self) -> ManagedBuffer {
-        self.config().get()
-    }
+    #[proxy]
+    fn service_proxy(&self, address: ManagedAddress) -> service::Proxy<Self::Api>;
+
+    #[proxy]
+    fn agreement_proxy(&self, address: ManagedAddress) -> agreement::Proxy<Self::Api>;
 }

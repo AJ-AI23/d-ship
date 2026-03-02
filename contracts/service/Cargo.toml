@@ -1,0 +1,15 @@
+[package]
+name = "service"
+version = "0.1.0"
+edition = "2021"
+publish = false
+description = "Service-level validation and quoting (stub implementation)"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+multiversx-sc = "0.57.1"
+
+[dev-dependencies.multiversx-sc-scenario]
+version = "0.57.1"
