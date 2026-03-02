@@ -109,25 +109,15 @@ jobs:
           echo "Deployed contract: $CONTRACT_ADDR  (tx: $TX_HASH)"
 
       - name: Write deployment result artifact
-        env:
-          TX_HASH:          ${{ steps.deploy.outputs.tx_hash }}
-          CONTRACT_ADDRESS: ${{ steps.deploy.outputs.contract_address }}
-          NETWORK:          ${{ inputs.network }}
-          DAPP_ID:          ${{ inputs.dapp_id }}
         run: |
           mkdir -p deployment-result
-          python3 - <<'PYEOF'
-import json, os
-result = {
-    "tx_hash":          os.environ.get("TX_HASH", ""),
-    "contract_address": os.environ.get("CONTRACT_ADDRESS", ""),
-    "network":          os.environ.get("NETWORK", ""),
-    "dapp_id":          os.environ.get("DAPP_ID", ""),
-}
-with open("deployment-result/result.json", "w") as f:
-    json.dump(result, f, indent=2)
-print(json.dumps(result, indent=2))
-PYEOF
+          TX_HASH="${{ steps.deploy.outputs.tx_hash }}"
+          CONTRACT_ADDRESS="${{ steps.deploy.outputs.contract_address }}"
+          NETWORK="${{ inputs.network }}"
+          DAPP_ID="${{ inputs.dapp_id }}"
+          printf '{"tx_hash":"%s","contract_address":"%s","network":"%s","dapp_id":"%s"}
+'             "$TX_HASH" "$CONTRACT_ADDRESS" "$NETWORK" "$DAPP_ID"             > deployment-result/result.json
+          cat deployment-result/result.json
 
       - name: Upload deployment result
         uses: actions/upload-artifact@v4
