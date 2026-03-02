@@ -2,11 +2,13 @@
 /target/
 **/*.rs.bk
 
-# Contract output
-/output/
+# Contract output (local build: meta produces .wasm, .abi.json, etc.)
+**/output/
 /output-*/
 *.wasm
 *.abi.json
+*.imports.json
+*.mxsc.json
 *.source.json
 
 # IDE
