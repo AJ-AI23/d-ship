@@ -44,8 +44,7 @@ jobs:
 
       - name: Build smart contract
         run: |
-          cd "${{ inputs.contract_path }}"
-          mxpy contract build
+          cargo run --manifest-path "${{ inputs.contract_path }}/meta/Cargo.toml" -- build
 
       - name: Resolve network settings
         id: network
@@ -78,9 +77,9 @@ jobs:
           printf '%s' "$MVX_PEM" > /tmp/deployer.pem
           chmod 600 /tmp/deployer.pem
 
-          WASM_FILE=$(find "${{ inputs.contract_path }}/output" -name "*.wasm" 2>/dev/null | head -1)
+          WASM_FILE=$(find "${{ inputs.contract_path }}/output" target -name "*.wasm" 2>/dev/null | head -1)
           if [ -z "$WASM_FILE" ]; then
-            echo "ERROR: No .wasm file found under ${{ inputs.contract_path }}/output" >&2
+            echo "::error::No .wasm file found. Build may have failed. Check ${{ inputs.contract_path }}/output or target/"
             exit 1
           fi
 
