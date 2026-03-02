@@ -15,9 +15,8 @@ on:
         required: false
         default: '{}'
       contract_path:
-        description: 'Path to the contract directory within the repo (e.g. contracts/shipment-creator)'
-        required: false
-        default: '.'
+        description: 'Path to the contract directory (e.g. contracts/shipment, contracts/parcel)'
+        required: true
       behavior_tree:
         description: 'Behavior tree configuration (JSON string)'
         required: false
@@ -31,10 +30,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Rust (nightly + wasm32)
+      - name: Set up Rust (stable + wasm32)
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain: nightly
+          toolchain: stable
           target: wasm32-unknown-unknown
           override: true
 
@@ -45,9 +44,7 @@ jobs:
 
       - name: Build smart contract
         run: |
-          CONTRACT_DIR="${{ inputs.contract_path }}"
-          [ -z "$CONTRACT_DIR" ] && CONTRACT_DIR="."
-          cd "$CONTRACT_DIR"
+          cd "${{ inputs.contract_path }}"
           mxpy contract build
 
       - name: Resolve network settings
@@ -70,17 +67,20 @@ jobs:
 
       - name: Deploy smart contract to MultiversX
         id: deploy
+        env:
+          MVX_PEM: ${{ secrets.MVX_DEPLOYER_PEM }}
         run: |
-          CONTRACT_DIR="${{ inputs.contract_path }}"
-          [ -z "$CONTRACT_DIR" ] && CONTRACT_DIR="."
+          if [ -z "$MVX_PEM" ]; then
+            echo "::error::Secret MVX_DEPLOYER_PEM is not set. Add it in repository secrets."
+            exit 1
+          fi
 
-          # Write deployer PEM to a temp file
-          printf '%s' "${{ secrets.MVX_DEPLOYER_PEM }}" > /tmp/deployer.pem
+          printf '%s' "$MVX_PEM" > /tmp/deployer.pem
+          chmod 600 /tmp/deployer.pem
 
-          # Find the compiled WASM
-          WASM_FILE=$(find "$CONTRACT_DIR/output" -name "*.wasm" | head -1)
+          WASM_FILE=$(find "${{ inputs.contract_path }}/output" -name "*.wasm" 2>/dev/null | head -1)
           if [ -z "$WASM_FILE" ]; then
-            echo "ERROR: No .wasm file found under $CONTRACT_DIR/output" >&2
+            echo "ERROR: No .wasm file found under ${{ inputs.contract_path }}/output" >&2
             exit 1
           fi
 
@@ -90,6 +90,7 @@ jobs:
             --pem=/tmp/deployer.pem \
             --proxy="${{ steps.network.outputs.proxy }}" \
             --chain="${{ steps.network.outputs.chain }}" \
+            --arguments "str:{}" \
             --gas-limit=100000000 \
             --send \
             --wait-result \
@@ -115,8 +116,8 @@ jobs:
           CONTRACT_ADDRESS="${{ steps.deploy.outputs.contract_address }}"
           NETWORK="${{ inputs.network }}"
           DAPP_ID="${{ inputs.dapp_id }}"
-          printf '{"tx_hash":"%s","contract_address":"%s","network":"%s","dapp_id":"%s"}
-'             "$TX_HASH" "$CONTRACT_ADDRESS" "$NETWORK" "$DAPP_ID"             > deployment-result/result.json
+          printf '{"tx_hash":"%s","contract_address":"%s","network":"%s","dapp_id":"%s"}\n' \
+            "$TX_HASH" "$CONTRACT_ADDRESS" "$NETWORK" "$DAPP_ID" > deployment-result/result.json
           cat deployment-result/result.json
 
       - name: Upload deployment result
