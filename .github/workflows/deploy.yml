@@ -84,7 +84,7 @@ jobs:
             exit 1
           fi
 
-          # Deploy and capture output
+          # Deploy and capture output (mxpy auto-fetches nonce)
           mxpy contract deploy \
             --bytecode="$WASM_FILE" \
             --pem=/tmp/deployer.pem \
@@ -93,8 +93,6 @@ jobs:
             --arguments "str:{}" \
             --gas-limit=100000000 \
             --send \
-            --wait-result \
-            --recall-nonce \
             --outfile=/tmp/deploy-output.json
 
           # Parse results
