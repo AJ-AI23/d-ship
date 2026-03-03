@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://d-ship.example.com/schemas/tracking-event-codes.json",
+  "title": "Tracking Event Codes",
+  "description": "Standard tracking event code definitions. Harmonized types for display; definition types for semantic category; codified meanings align with openPEPPOL TransportationStatusCode (PEPPOL-INCUBATION-LOGISTICS), X12 EDI 157, and ISO/IEC 19987 (EPCIS) event concepts.",
+  "type": "object",
+  "properties": {
+    "harmonizedEventType": {
+      "type": "string",
+      "enum": [
+        "BOOKED",
+        "DISPATCHED",
+        "IN_TRANSIT",
+        "OUT_FOR_DELIVERY",
+        "DELIVERED",
+        "EXCEPTION",
+        "VOID",
+        "RETURN_INITIATED"
+      ],
+      "description": "Simplified high-level status for UI and aggregation"
+    },
+    "definitionType": {
+      "type": "string",
+      "enum": ["MILESTONE", "INFO", "EXCEPTION"],
+      "description": "Semantic category: MILESTONE=key progression; INFO=informational; EXCEPTION=incident/error"
+    },
+    "codifiedMeaning": {
+      "type": "object",
+      "description": "Reference to external standard for machine interoperability",
+      "properties": {
+        "scheme": {
+          "type": "string",
+          "enum": [
+            "PEPPOL-TRANSPORTATION-STATUS",
+            "X12-157",
+            "EPCIS-EVENT"
+          ],
+          "description": "Code list scheme identifier"
+        },
+        "code": {
+          "type": "string",
+          "description": "Code value from the scheme (e.g. PEPPOL numeric '21', '18')"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable meaning from the standard"
+        }
+      }
+    }
+  },
+  "required": ["harmonizedEventType", "definitionType"],
+  "definitions": {
+    "eventDefinitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "harmonizedEventType": { "$ref": "#/properties/harmonizedEventType" },
+          "definitionType": { "$ref": "#/properties/definitionType" },
+          "codifiedMeaning": { "$ref": "#/properties/codifiedMeaning" }
+        }
+      }
+    }
+  }
+}

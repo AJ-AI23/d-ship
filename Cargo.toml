@@ -18,4 +18,8 @@ members = [
     "contracts/onboarding/meta",
     "contracts/service",
     "contracts/service/meta",
+    "contracts/forwarder-agreement",
+    "contracts/forwarder-agreement/meta",
+    "contracts/pickup",
+    "contracts/pickup/meta",
 ]

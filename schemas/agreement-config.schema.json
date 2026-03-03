@@ -41,6 +41,25 @@
     "spendingCap": {
       "type": "string",
       "description": "Per-period cap in wei (optional)"
+    },
+    "availablePickupSlots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "timeFrom": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+          "timeTo": { "type": "string", "pattern": "^\\d{2}:\\d{2}$" },
+          "daysOfWeek": {
+            "type": "array",
+            "items": { "type": "integer", "minimum": 0, "maximum": 6 }
+          }
+        }
+      },
+      "description": "Time windows when pickup is allowed"
+    },
+    "pickupFee": {
+      "type": "string",
+      "description": "Wei amount per pickup request"
     }
   },
   "required": ["enabledServices"]

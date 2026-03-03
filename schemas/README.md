@@ -14,7 +14,9 @@ JSON schemas for d-ship contract data, aligned with the [nShift Go API](https://
 | `party.schema.json` | Party (type, roles, address id) | Party |
 | `shipment-booking.schema.json` | Shipment booking request | ShipmentBookingRequest |
 | `tracker.schema.json` | Tracker (status, shipment, parcels) | TrackerRequest |
-| `tracking-event.schema.json` | Single tracking event | Tracker status enum |
+| `tracking-event.schema.json` | Single tracking event | Harmonized + definition type |
+| `tracking-event-codes.schema.json` | Event code structure | Harmonized, definitionType, codifiedMeaning |
+| `tracking-event-definitions.json` | Event definitions catalog | PEPPOL, X12-157, EPCIS mapping |
 | `serial.schema.json` | Serial type config | SerialResponse |
 
 ### Config Schemas (d-app deployment)

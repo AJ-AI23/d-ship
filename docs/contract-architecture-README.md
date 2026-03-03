@@ -57,9 +57,9 @@ Represents the on-chain customer agreement and billing authority.
 
 - `authorizeShipment(serviceId, normalizedMetrics, amount, quoteHash)`
 - `reserve(amount, reference)`
-- `capture(reservationId)`
+- `capture(reservationId)` – stores captured amount per shipment for refund flow
 - `release(reservationId)`
-- `recordUsage(...)`
+- `refundForVoidedShipment(trackingNumber)` – payable; carrier refunds voided shipment cost to customer (only when not dispatched)
 - `deposit()`
 
 ### Enforces:
@@ -83,20 +83,21 @@ Acts as the shipment creation dApp backend.
 
 ### Exposes:
 
-- `createShipment(customerContractAddr, serviceId, shipmentPayload)`
+- `createShipment(agreementAddr, serviceId, shipmentPayload, parcelIds...)`
 
 ### Internal Flow:
 
-1. Validate shipment payload
-2. Call Service:
+1. Call Serial: `generate(prefix "S")` → tracking number
+2. Validate shipment payload
+3. Call Service:
    - `validate(payload)`
    - `quote(payload)`
-3. Call Agreement:
+4. Call Agreement:
    - `authorizeShipment(...)`
    - `reserve(amount)`
-4. Create shipment entity (NFT or stored record)
-5. Call `capture(reservationId)`
-6. Emit `ShipmentCreated`
+5. Create shipment entity with parcel_ids
+6. Call `capture(reservationId)`
+7. Emit `ShipmentCreated`
 
 If any step fails:
 - Revert transaction OR
@@ -164,7 +165,16 @@ Carrier pays deployment gas (optionally reimbursed via deposit).
 
 ---
 
-# 4️⃣ Security Rules
+# 4️⃣ Void and Refund Semantics
+
+- **Void:** Shipper (shipment owner) may void at any time. Shipment marked void; VOID event registered in Tracker.
+- **Refund:** When voided **before** DISPATCHED (pickup not yet requested), carrier may call Agreement.refundForVoidedShipment with EGLD to return captured cost to customer deposit.
+- **No refund after dispatch:** Once pickup requested (DISPATCHED event exists), refund is not available.
+- **Pickup:** requestPickup rejects voided shipments.
+
+---
+
+# 5️⃣ Security Rules
 
 - Agreement only trusts:
   - The Shipment contract specified at deployment
@@ -180,7 +190,7 @@ Carrier pays deployment gas (optionally reimbursed via deposit).
 
 ---
 
-# 5️⃣ Core Design Goals Achieved
+# 6️⃣ Core Design Goals Achieved
 
 - Carrier controls deployment
 - Customer cryptographically approves before deployment

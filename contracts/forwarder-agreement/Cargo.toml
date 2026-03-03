@@ -1,16 +1,15 @@
 [package]
-name = "tracker"
+name = "forwarder-agreement"
 version = "0.1.0"
 edition = "2021"
 publish = false
-description = "Tracking event registration d-app for MultiverseX shipping"
+description = "Carrier-forwarder agreement: forwarder receives payment for handling (PUDO, terminal/DC)"
 
 [lib]
 path = "src/lib.rs"
 
 [dependencies]
 multiversx-sc = "0.57.1"
-dship-common = { path = "../../crates/dship-common" }
 
 [dev-dependencies.multiversx-sc-scenario]
 version = "0.57.1"

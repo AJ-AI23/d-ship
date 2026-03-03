@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://d-ship.example.com/schemas/tracking-event-definitions.json",
+  "title": "Tracking Event Code Definitions Catalog",
+  "description": "Canonical mapping of harmonized event types to definition types and external standard codes. Aligns with openPEPPOL TransportationStatusCode (PEPPOL-INCUBATION-LOGISTICS v3.0), X12 EDI Element 157, ISO/IEC 19987 (EPCIS).",
+  "eventDefinitions": [
+    {
+      "harmonizedEventType": "BOOKED",
+      "definitionType": "MILESTONE",
+      "codifiedMeanings": [
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "6", "description": "Booking, completed" },
+        { "scheme": "X12-157", "code": "BP", "description": "Bill of lading printed" }
+      ]
+    },
+    {
+      "harmonizedEventType": "BOOKED",
+      "definitionType": "EXCEPTION",
+      "codifiedMeanings": [
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "7", "description": "Booking, cancelled" }
+      ]
+    },
+    {
+      "harmonizedEventType": "DISPATCHED",
+      "definitionType": "MILESTONE",
+      "codifiedMeanings": [
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "27", "description": "Despatch, completed" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "24", "description": "Departure, completed" },
+        { "scheme": "X12-157", "code": "SH", "description": "Shipped" }
+      ]
+    },
+    {
+      "harmonizedEventType": "IN_TRANSIT",
+      "definitionType": "MILESTONE",
+      "codifiedMeanings": [
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "31", "description": "En route" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "35", "description": "Forwarded to destination" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "16", "description": "Crossed border" },
+        { "scheme": "X12-157", "code": "IT", "description": "In transit" }
+      ]
+    },
+    {
+      "harmonizedEventType": "IN_TRANSIT",
+      "definitionType": "INFO",
+      "codifiedMeanings": [
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "48", "description": "Loading, completed onto a means of transport" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "29", "description": "Unloaded" }
+      ]
+    },
+    {
+      "harmonizedEventType": "IN_TRANSIT",
+      "definitionType": "EXCEPTION",
+      "codifiedMeanings": [
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "20", "description": "Delayed, in the course of transportation" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "18", "description": "Damaged in the course of transportation" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "101", "description": "Delayed in transit" },
+        { "scheme": "X12-157", "code": "DE", "description": "Delayed" }
+      ]
+    },
+    {
+      "harmonizedEventType": "OUT_FOR_DELIVERY",
+      "definitionType": "MILESTONE",
+      "codifiedMeanings": [
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "113", "description": "Delivery, in progress" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "45", "description": "Arrival, consignee informed" },
+        { "scheme": "X12-157", "code": "OF", "description": "Out for delivery" }
+      ]
+    },
+    {
+      "harmonizedEventType": "DELIVERED",
+      "definitionType": "MILESTONE",
+      "codifiedMeanings": [
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "21", "description": "Delivery, completed" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "22", "description": "Delivery, completed as per instruction" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "1", "description": "Arrival, completed" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "72", "description": "Receipt of goods fully acknowledged" },
+        { "scheme": "X12-157", "code": "DL", "description": "Delivered" }
+      ]
+    },
+    {
+      "harmonizedEventType": "DELIVERED",
+      "definitionType": "EXCEPTION",
+      "codifiedMeanings": [
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "114", "description": "Delivery, accepted subject to further inspection" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "307", "description": "Damaged but deliverable" }
+      ]
+    },
+    {
+      "harmonizedEventType": "EXCEPTION",
+      "definitionType": "EXCEPTION",
+      "codifiedMeanings": [
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "23", "description": "Delivery, not completed" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "106", "description": "Delivery refused" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "109", "description": "Delivery, impossible, delivery notice left" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "49", "description": "Lost" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "36", "description": "Not found" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "18", "description": "Damaged in the course of transportation" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "17", "description": "Customs clearance, refused" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "210", "description": "Delivery, unsuccessful attempt" },
+        { "scheme": "X12-157", "code": "DE", "description": "Delivery exception" },
+        { "scheme": "X12-157", "code": "DA", "description": "Damaged" }
+      ]
+    },
+    {
+      "harmonizedEventType": "EXCEPTION",
+      "definitionType": "INFO",
+      "codifiedMeanings": [
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "105", "description": "Delivery, postponed" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "242", "description": "New delivery arrangements advised" }
+      ]
+    },
+    {
+      "harmonizedEventType": "VOID",
+      "definitionType": "EXCEPTION",
+      "codifiedMeanings": [
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "7", "description": "Booking, cancelled" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "111", "description": "Transport terminated" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "324", "description": "Instruction to despatch, cancelled" },
+        { "scheme": "X12-157", "code": "CA", "description": "Cancelled" }
+      ]
+    },
+    {
+      "harmonizedEventType": "RETURN_INITIATED",
+      "definitionType": "MILESTONE",
+      "codifiedMeanings": [
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "111", "description": "Transport terminated" },
+        { "scheme": "PEPPOL-TRANSPORTATION-STATUS", "code": "23", "description": "Delivery, not completed" }
+      ]
+    }
+  ],
+  "definitionTypes": {
+    "MILESTONE": "Key progression point in the shipment lifecycle; primary status indicator",
+    "INFO": "Informational update; supplementary detail without changing primary status",
+    "EXCEPTION": "Incident, error, or abnormal condition requiring attention"
+  },
+  "standardReferences": {
+    "PEPPOL-TRANSPORTATION-STATUS": "https://docs.peppol.eu/logistics/2024-Q1/codelist/TransportationStatusCode/",
+    "X12-157": "https://www.stedi.com/edi/x12/element/157",
+    "EPCIS-EVENT": "ISO/IEC 19987 - EPCIS event types"
+  }
+}

@@ -11,6 +11,7 @@ path = "src/lib.rs"
 [dependencies]
 multiversx-sc = "0.57.1"
 dship-common = { path = "../../crates/dship-common" }
+serial = { path = "../serial" }
 
 [dev-dependencies.multiversx-sc-scenario]
 version = "0.57.1"

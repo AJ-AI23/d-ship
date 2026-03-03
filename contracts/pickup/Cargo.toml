@@ -1,9 +1,9 @@
 [package]
-name = "tracker"
+name = "pickup"
 version = "0.1.0"
 edition = "2021"
 publish = false
-description = "Tracking event registration d-app for MultiverseX shipping"
+description = "Pickup scheduling after shipment creation; charges shipper via Agreement, registers DISPATCHED events"
 
 [lib]
 path = "src/lib.rs"
@@ -11,6 +11,9 @@ path = "src/lib.rs"
 [dependencies]
 multiversx-sc = "0.57.1"
 dship-common = { path = "../../crates/dship-common" }
+agreement = { path = "../agreement" }
+shipment = { path = "../shipment" }
+tracker = { path = "../tracker" }
 
 [dev-dependencies.multiversx-sc-scenario]
 version = "0.57.1"

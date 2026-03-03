@@ -10,6 +10,7 @@ path = "src/lib.rs"
 
 [dependencies]
 multiversx-sc = "0.57.1"
+forwarder-agreement = { path = "../forwarder-agreement" }
 
 [dev-dependencies.multiversx-sc-scenario]
 version = "0.57.1"

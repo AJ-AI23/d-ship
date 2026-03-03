@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://api.qa.nshiftgo.com/schemas/tracking-event.json",
   "title": "Tracking Event",
-  "description": "Single tracking event for register_event. Maps to nShift tracker status and event model.",
+  "description": "Single tracking event for register_event. Composes harmonized event type (simplified status), definition type (info/exception/milestone), and optional codified meaning. See tracking-event-codes.schema.json and tracking-event-definitions.json.",
   "type": "object",
   "required": ["trackingNumber", "eventType", "timestamp"],
   "properties": {
@@ -22,7 +22,23 @@
         "EXCEPTION",
         "VOID"
       ],
-      "description": "Harmonized event type"
+      "description": "Harmonized event type (simplified status). For codified codes, use codifiedMeaning."
+    },
+    "definitionType": {
+      "type": "string",
+      "enum": ["MILESTONE", "INFO", "EXCEPTION"],
+      "description": "Semantic category: MILESTONE=key progression; INFO=informational; EXCEPTION=incident. Optional; default inferred from eventType."
+    },
+    "codifiedMeaning": {
+      "type": "object",
+      "description": "Reference to external standard (openPEPPOL, X12, EPCIS)",
+      "properties": {
+        "scheme": {
+          "type": "string",
+          "enum": ["PEPPOL-TRANSPORTATION-STATUS", "X12-157", "EPCIS-EVENT"]
+        },
+        "code": { "type": "string" }
+      }
     },
     "timestamp": {
       "type": "integer",

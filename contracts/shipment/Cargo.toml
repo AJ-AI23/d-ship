@@ -13,6 +13,9 @@ multiversx-sc = "0.57.1"
 dship-common = { path = "../../crates/dship-common" }
 service = { path = "../service" }
 agreement = { path = "../agreement" }
+serial = { path = "../serial" }
+tracker = { path = "../tracker" }
+parcel = { path = "../parcel" }
 
 [dev-dependencies.multiversx-sc-scenario]
 version = "0.57.1"

@@ -41,11 +41,14 @@ impl PartyRoles {
 }
 
 /// Party reference: type (ADDRESS|PUDO) + role + address id.
+/// When party has DELIVERY role and type PUDO, forwarder_agreement_addr identifies the forwarder.
 #[derive(Clone)]
 pub struct Party<M: ManagedTypeApi> {
     pub party_type: ManagedBuffer<M>, // "ADDRESS" | "PUDO"
     pub roles: ManagedVec<M, ManagedBuffer<M>>,
     pub address_id: ManagedBuffer<M>,
+    /// ForwarderAgreement contract address when this party is the delivery handler.
+    pub forwarder_agreement_addr: Option<ManagedAddress<M>>,
 }
 
 /// Weight units per parcel.schema.json weightUnit enum.
@@ -99,6 +102,14 @@ pub struct Shipment<M: ManagedTypeApi> {
 #[derive(Clone)]
 pub struct TrackingEvent<M: ManagedTypeApi> {
     pub tracking_number: ManagedBuffer<M>,
+    pub event_type: ManagedBuffer<M>, // BOOKED | DISPATCHED | IN_TRANSIT | etc.
+    pub timestamp: u64,
+    pub location: ManagedBuffer<M>,
+}
+
+/// Compact tracking event for on-chain storage (tracking_number is the storage key).
+#[derive(Clone, TopEncode, TopDecode, NestedEncode, NestedDecode, ManagedVecItem)]
+pub struct TrackingEventRecord<M: ManagedTypeApi> {
     pub event_type: ManagedBuffer<M>, // BOOKED | DISPATCHED | IN_TRANSIT | etc.
     pub timestamp: u64,
     pub location: ManagedBuffer<M>,

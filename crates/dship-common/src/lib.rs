@@ -16,4 +16,5 @@ pub mod entities;
 pub mod ownership;
 pub mod payment;
 pub mod storage;
+pub mod tracking_events;
 pub mod validation;

@@ -60,3 +60,29 @@ pub fn build_approval_message<M: ManagedTypeApi>(
     msg.append_bytes(&nonce.to_be_bytes());
     msg
 }
+
+/// Builds the approval message that the forwarder signs for ForwarderAgreement deployment.
+/// Format: APPROVE_FORWARDER_DEPLOY|{carrier_addr}|{factory_addr}|{code_hash}|{config_hash}|{expiry_8be}{nonce_8be}
+/// Same structure as customer approval; prefix distinguishes forwarder flow.
+pub fn build_forwarder_approval_message<M: ManagedTypeApi>(
+    carrier_addr: &ManagedAddress<M>,
+    factory_addr: &ManagedAddress<M>,
+    forwarder_account_code_hash: &ManagedBuffer<M>,
+    agreement_config_hash: &ManagedBuffer<M>,
+    expiry: u64,
+    nonce: u64,
+) -> ManagedBuffer<M> {
+    let mut msg = ManagedBuffer::new();
+    msg.append_bytes(b"APPROVE_FORWARDER_DEPLOY|");
+    msg.append(carrier_addr.as_managed_buffer());
+    msg.append_bytes(b"|");
+    msg.append(factory_addr.as_managed_buffer());
+    msg.append_bytes(b"|");
+    msg.append(forwarder_account_code_hash);
+    msg.append_bytes(b"|");
+    msg.append(agreement_config_hash);
+    msg.append_bytes(b"|");
+    msg.append_bytes(&expiry.to_be_bytes());
+    msg.append_bytes(&nonce.to_be_bytes());
+    msg
+}

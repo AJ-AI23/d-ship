@@ -7,8 +7,10 @@ name = "agreement"
 version = "0.1.0"
 dependencies = [
  "dship-common",
+ "forwarder-agreement",
  "multiversx-sc",
  "multiversx-sc-scenario",
+ "tracker",
 ]
 
 [[package]]
@@ -336,6 +338,22 @@ name = "foldhash"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d9c4f5dac5e15c24eb999c26181a6ca40b39fe946cbe4c263c7209467bc83af2"
+
+[[package]]
+name = "forwarder-agreement"
+version = "0.1.0"
+dependencies = [
+ "multiversx-sc",
+ "multiversx-sc-scenario",
+]
+
+[[package]]
+name = "forwarder-agreement-meta"
+version = "0.1.0"
+dependencies = [
+ "forwarder-agreement",
+ "multiversx-sc-meta-lib",
+]
 
 [[package]]
 name = "generic-array"
@@ -696,6 +714,7 @@ dependencies = [
  "dship-common",
  "multiversx-sc",
  "multiversx-sc-scenario",
+ "serial",
 ]
 
 [[package]]
@@ -711,6 +730,26 @@ name = "pathdiff"
 version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "df94ce210e5bc13cb6651479fa48d14f601d9858cfe0467f43ae157023b938d3"
+
+[[package]]
+name = "pickup"
+version = "0.1.0"
+dependencies = [
+ "agreement",
+ "dship-common",
+ "multiversx-sc",
+ "multiversx-sc-scenario",
+ "shipment",
+ "tracker",
+]
+
+[[package]]
+name = "pickup-meta"
+version = "0.1.0"
+dependencies = [
+ "multiversx-sc-meta-lib",
+ "pickup",
+]
 
 [[package]]
 name = "pkcs8"
@@ -891,6 +930,7 @@ dependencies = [
 name = "service"
 version = "0.1.0"
 dependencies = [
+ "forwarder-agreement",
  "multiversx-sc",
  "multiversx-sc-scenario",
 ]
@@ -932,7 +972,10 @@ dependencies = [
  "dship-common",
  "multiversx-sc",
  "multiversx-sc-scenario",
+ "parcel",
+ "serial",
  "service",
+ "tracker",
 ]
 
 [[package]]
@@ -1046,6 +1089,7 @@ checksum = "5d99f8c9a7727884afe522e9bd5edbfc91a3312b36a77b5fb8926e4c31a41801"
 name = "tracker"
 version = "0.1.0"
 dependencies = [
+ "dship-common",
  "multiversx-sc",
  "multiversx-sc-scenario",
 ]

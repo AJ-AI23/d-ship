@@ -27,6 +27,10 @@
       "type": "string",
       "format": "uuid",
       "description": "Address ID or PUDO point ID"
+    },
+    "forwarderAgreementAddr": {
+      "type": "string",
+      "description": "Bech32 address of the ForwarderAgreement contract. When party has DELIVERY role and type PUDO, this identifies the forwarder handling delivery."
     }
   }
 }

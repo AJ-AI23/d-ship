@@ -68,6 +68,10 @@
         }
       }
     },
+    "forwarderAgreementAddr": {
+      "type": "string",
+      "description": "Bech32 address of ForwarderAgreement contract. When present, the delivery is handled by this forwarder (PUDO, terminal/DC). Alternate to per-party forwarderAgreementAddr."
+    },
     "parcelIds": {
       "type": "array",
       "items": { "type": "string", "format": "uuid" },
