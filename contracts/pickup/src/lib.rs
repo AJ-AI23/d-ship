@@ -4,9 +4,11 @@
 //! charges the shipper via Agreement reserve/capture, and registers DISPATCHED events in Tracker.
 #![no_std]
 
-use multiversx_sc::imports::*;
+mod generated_validation {
+    include!(concat!(env!("OUT_DIR"), "/validation.rs"));
+}
 
-const MAX_BATCH_SIZE: u32 = 50;
+use multiversx_sc::imports::*;
 
 #[multiversx_sc::contract]
 pub trait Pickup {
@@ -59,7 +61,7 @@ pub trait Pickup {
         let tracking_vec: ManagedVec<Self::Api, ManagedBuffer> = tracking_numbers.to_vec();
         require!(!tracking_vec.is_empty(), "At least one tracking number required");
         require!(
-            tracking_vec.len() <= MAX_BATCH_SIZE as usize,
+            generated_validation::validate(tracking_vec.len() as u64),
             "Batch size exceeds limit"
         );
         require!(!agreement_addr.is_zero(), "Agreement address required");

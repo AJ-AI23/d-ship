@@ -5,6 +5,11 @@
 //! on-chain views support indexer bootstrap and verification only.
 #![no_std]
 
+#[allow(dead_code)]
+mod generated_validation {
+    include!(concat!(env!("OUT_DIR"), "/validation.rs"));
+}
+
 use multiversx_sc::imports::*;
 
 #[multiversx_sc::contract]

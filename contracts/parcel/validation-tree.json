@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "root": {
+    "id": "parcel-validation",
+    "type": "Sequence",
+    "children": [
+      {
+        "id": "weight-range",
+        "type": "RangeCheck",
+        "params": {
+          "field": "weight",
+          "op": "le",
+          "max": 30000
+        }
+      },
+      {
+        "id": "weight-unit-enum",
+        "type": "EnumCheck",
+        "params": {
+          "field": "weightUnit",
+          "allowed": ["G", "KG", "LB", "OZ"]
+        }
+      },
+      {
+        "id": "dg-max-one",
+        "type": "Selector",
+        "children": [
+          {
+            "id": "no-dg",
+            "type": "Condition",
+            "params": {
+              "field": "dangerousGoods",
+              "op": "eq",
+              "value": null
+            }
+          },
+          {
+            "id": "dg-length-one",
+            "type": "RangeCheck",
+            "params": {
+              "field": "dangerousGoods.length",
+              "op": "eq",
+              "value": 1
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

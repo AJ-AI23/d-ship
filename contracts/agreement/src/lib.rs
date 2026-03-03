@@ -4,6 +4,11 @@
 //! may reserve, capture, or release funds.
 #![no_std]
 
+#[allow(dead_code)]
+mod generated_validation {
+    include!(concat!(env!("OUT_DIR"), "/validation.rs"));
+}
+
 use dship_common::billing::{Reservation, ReservationState};
 use multiversx_sc::imports::*;
 

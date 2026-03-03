@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "root": {
+    "id": "tracker-validation",
+    "type": "Sequence",
+    "children": [
+      {
+        "id": "tracking-number-non-empty",
+        "type": "RangeCheck",
+        "params": {
+          "field": "tracking_number_len",
+          "op": "gt",
+          "value": 0
+        }
+      },
+      {
+        "id": "event-type-non-empty",
+        "type": "RangeCheck",
+        "params": {
+          "field": "event_type_len",
+          "op": "gt",
+          "value": 0
+        }
+      }
+    ]
+  }
+}

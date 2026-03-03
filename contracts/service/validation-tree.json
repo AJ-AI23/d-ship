@@ -1,0 +1,8 @@
+{
+  "version": "1.0",
+  "root": {
+    "id": "service-validation",
+    "type": "Sequence",
+    "children": []
+  }
+}

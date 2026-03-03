@@ -6,6 +6,10 @@
 //! optional encrypted payload for receiver-visible sensitive data.
 #![no_std]
 
+mod generated_validation {
+    include!(concat!(env!("OUT_DIR"), "/validation.rs"));
+}
+
 use dship_common::entities::TrackingEventRecord;
 use multiversx_sc::imports::*;
 
@@ -100,8 +104,13 @@ pub trait Tracker {
                 || (!pickup_addr.is_zero() && caller == pickup_addr),
             "Only carrier, shipment contract, forwarder, or pickup may register events"
         );
-        require!(!tracking_number.is_empty(), "Empty tracking number");
-        require!(!event_type.is_empty(), "Empty event type");
+        require!(
+            generated_validation::validate(
+                event_type.len(),
+                tracking_number.len(),
+            ),
+            "Empty tracking number or event type"
+        );
 
         let location_buf = match location {
             OptionalValue::Some(l) => l,
@@ -133,7 +142,10 @@ pub trait Tracker {
             !shipment_addr.is_zero() && caller == shipment_addr,
             "Only shipment contract may register shipments"
         );
-        require!(!tracking_number.is_empty(), "Empty tracking number");
+        require!(
+            generated_validation::validate(6, tracking_number.len()),
+            "Empty tracking number"
+        );
 
         let book_event = TrackingEventRecord {
             event_type: ManagedBuffer::from(b"BOOKED"),

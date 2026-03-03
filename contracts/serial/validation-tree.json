@@ -1,0 +1,8 @@
+{
+  "version": "1.0",
+  "root": {
+    "id": "serial-validation",
+    "type": "Sequence",
+    "children": []
+  }
+}

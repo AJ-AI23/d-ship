@@ -4,6 +4,11 @@
 //! Validates that agreement, parcel_ids, and forwarder exist on-chain. Lookup is done off-chain via indexers.
 #![no_std]
 
+#[allow(dead_code)]
+mod generated_validation {
+    include!(concat!(env!("OUT_DIR"), "/validation.rs"));
+}
+
 use dship_common::entities;
 use multiversx_sc::imports::*;
 

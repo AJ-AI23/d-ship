@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "root": {
+    "id": "forwarder-agreement-validation",
+    "type": "Sequence",
+    "children": [
+      {
+        "id": "payment-positive",
+        "type": "RangeCheck",
+        "params": {
+          "field": "payment",
+          "op": "gt",
+          "value": 0
+        }
+      }
+    ]
+  }
+}

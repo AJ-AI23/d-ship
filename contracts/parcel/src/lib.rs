@@ -4,6 +4,10 @@
 //! the full schema-aligned entity.
 #![no_std]
 
+mod generated_validation {
+    include!(concat!(env!("OUT_DIR"), "/validation.rs"));
+}
+
 use dship_common::{entities, ownership, validation};
 use multiversx_sc::imports::*;
 
@@ -107,14 +111,15 @@ pub trait Parcel {
             dangerous_goods,
         };
 
-        // 2. Validate input against parcel.schema.json rules
+        // 2. Validate input against behavior tree (compiled from validation-tree.json)
+        let weight_unit_slice = weight_unit.to_boxed_bytes().as_slice();
         require!(
-            validation::validate_parcel(&entity),
+            generated_validation::validate(
+                entity.dangerous_goods.len(),
+                entity.weight,
+                weight_unit_slice,
+            ),
             "Parcel validation failed: check weightUnit (G/KG/LB/OZ), itemIds, dangerousGoods"
-        );
-        require!(
-            validation::validate_weight_unit(&weight_unit),
-            "Invalid weightUnit; use G, KG, LB, or OZ"
         );
 
         // 3. Config-driven validation (weight limits)

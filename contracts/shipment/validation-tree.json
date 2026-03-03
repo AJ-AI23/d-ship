@@ -1,0 +1,8 @@
+{
+  "version": "1.0",
+  "root": {
+    "id": "shipment-validation",
+    "type": "Sequence",
+    "children": []
+  }
+}

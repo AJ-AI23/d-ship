@@ -1,0 +1,23 @@
+{
+  "name": "@dship/carrier-sdk",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for d-ship carrier backend integrations",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": ["multiversx", "dship", "shipping", "carrier", "blockchain"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@multiversx/sdk-core": "^15.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

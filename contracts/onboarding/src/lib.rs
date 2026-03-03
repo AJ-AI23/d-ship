@@ -4,6 +4,11 @@
 //! from the Agreement template.
 #![no_std]
 
+#[allow(dead_code)]
+mod generated_validation {
+    include!(concat!(env!("OUT_DIR"), "/validation.rs"));
+}
+
 use dship_common::agreement;
 use multiversx_sc::{
     imports::*,

@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "root": {
+    "id": "agreement-validation",
+    "type": "Sequence",
+    "children": [
+      {
+        "id": "amount-positive",
+        "type": "RangeCheck",
+        "params": {
+          "field": "amount",
+          "op": "gt",
+          "value": 0
+        }
+      }
+    ]
+  }
+}

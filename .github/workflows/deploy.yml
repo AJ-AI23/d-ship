@@ -42,7 +42,19 @@ jobs:
           pip3 install multiversx-sdk-cli --quiet
           mxpy --version
 
+      - name: Prepare behavior tree override
+        id: bt
+        run: |
+          if [ -n "${{ inputs.behavior_tree }}" ]; then
+            echo "${{ inputs.behavior_tree }}" > /tmp/custom-validation-tree.json
+            echo "path=/tmp/custom-validation-tree.json" >> $GITHUB_OUTPUT
+          else
+            echo "path=" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build smart contract
+        env:
+          DSHIP_VALIDATION_TREE: ${{ steps.bt.outputs.path }}
         run: |
           cd "${{ inputs.contract_path }}/meta"
           cargo run build

@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "root": {
+    "id": "pickup-validation",
+    "type": "Sequence",
+    "children": [
+      {
+        "id": "batch-size-limit",
+        "type": "RangeCheck",
+        "params": {
+          "field": "batch_size",
+          "op": "le",
+          "max": 50
+        }
+      }
+    ]
+  }
+}

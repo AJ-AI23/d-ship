@@ -11,10 +11,9 @@ path = "src/lib.rs"
 [[bin]]
 name = "dship-bt-compile"
 path = "src/bin/compile.rs"
-required-features = ["bin"]
 
 [features]
-default = []
+default = ["bin"]
 bin = []
 
 [dependencies]
