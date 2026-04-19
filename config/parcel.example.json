@@ -6,9 +6,9 @@
     "autoLabel": true
   },
   "validators": {
-    "maxWeight": 80000
+    "maxWeight": 90000
   },
   "info": {
-    "version": "0.1.1"
+    "version": "0.1.2"
   }
 }
