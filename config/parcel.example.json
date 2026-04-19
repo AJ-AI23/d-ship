@@ -6,7 +6,7 @@
     "autoLabel": true
   },
   "validators": {
-    "maxWeight": 60000
+    "maxWeight": 70000
   },
   "info": {
     "version": "0.0.4"
