@@ -1,1 +1,14 @@
-{"network":{"gasLimit":60000000},"processors":{"autoLabel":true},"validators":{"maxWeight":50000}}
+{
+  "network": {
+    "gasLimit": 60000000
+  },
+  "processors": {
+    "autoLabel": true
+  },
+  "validators": {
+    "maxWeight": 60000
+  },
+  "info": {
+    "version": "0.0.4"
+  }
+}
